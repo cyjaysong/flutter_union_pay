@@ -29,9 +29,11 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+        main.assets.srcDirs 'src/main/assets'
+        main.jniLibs.srcDirs 'libs'
     }
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 23
     }
     lintOptions {
         disable 'InvalidPackage'
@@ -40,4 +42,6 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation files('libs/UPPayAssistEx.jar')
+    implementation files('libs/UPPayPluginExPro.jar')
 }

@@ -46,11 +46,33 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            FlutterUnionPay.pay(mode: "01",tn: "747421476465444239201");
+          },
+          child: Icon(Icons.payment),
+        ),
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+        body: Column(
+          children: [
+            Center(
+              child: Text('Running on: $_platformVersion\n'),
+            ),
+           Builder(
+             builder:(context){
+               return  TextButton(
+                 onPressed: () {
+                   FlutterUnionPay.installed.then((value) {
+                     Scaffold.of(context).showSnackBar(SnackBar(content: Text(value.toString())));
+                   });
+                 },
+                 child: Text('check'),
+               );
+             },
+           ),
+          ],
         ),
       ),
     );
