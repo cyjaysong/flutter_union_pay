@@ -1,7 +1,6 @@
 package tech.laihz.flutter_union_pay
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
@@ -10,42 +9,48 @@ import com.unionpay.UPPayAssistEx
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.*
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import io.flutter.plugin.common.PluginRegistry
+import java.util.*
+import kotlin.collections.HashMap
+
 
 /** FlutterUnionPayPlugin */
-class FlutterUnionPayPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
+class FlutterUnionPayPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegistry.ActivityResultListener {
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
     /// when the Flutter Engine is detached from the Activity
     private lateinit var channel: MethodChannel
-    private  var activity: Activity?  =  null
-    private lateinit var activityBinding:ActivityPluginBinding
-    private lateinit var context:Context
+    private var messageChannel: BasicMessageChannel<String>? = null
+    private var activity: Activity? = null
+
+
+    companion object {
+        const val PAYMENT_CANCEL = 0
+        const val PAYMENT_SUCCESS = 1
+        const val PAYMENT_FAIL = 2
+
+        const val PACKAGE_NAME = "flutter_union_pay"
+    }
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_union_pay")
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger, PACKAGE_NAME)
+        messageChannel = BasicMessageChannel(flutterPluginBinding.binaryMessenger, PACKAGE_NAME, StringCodec.INSTANCE)
         channel.setMethodCallHandler(this)
-        context = flutterPluginBinding.applicationContext
+
     }
 
 
-
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-
-        Log.e("engine","engine888")
         when (call.method) {
-            "getPlatformVersion" -> {
-                Toast.makeText(activity, "test", Toast.LENGTH_SHORT)
-                result.success("Android ${android.os.Build.VERSION.RELEASE}")
+            "version" -> {
+                result.success(UPPayAssistEx.VERSION)
             }
             "installed" -> {
-                Log.e("ctx",activity.toString())
-                Toast.makeText(activity, "test", Toast.LENGTH_LONG)
+                Log.e("ctx", activity.toString())
+                Toast.makeText(activity, "test", Toast.LENGTH_LONG).show()
                 val installed = UPPayAssistEx.checkWalletInstalled(activity)
                 result.success(installed)
             }
@@ -66,14 +71,9 @@ class FlutterUnionPayPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-//        Toast.makeText(this,"activity",Toast.LENGTH_SHORT)
-
         activity = binding.activity
-
-//
-
+        binding.addActivityResultListener(this)
     }
-
 
 
     override fun onDetachedFromActivityForConfigChanges() {
@@ -85,6 +85,21 @@ class FlutterUnionPayPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     override fun onDetachedFromActivity() {
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
+        if (data == null) {
+            return true
+        }
+        var payload: HashMap<String, Any> = HashMap()
+        val paymentStatus = data.extras?.getString("pay_result")
+        when (paymentStatus?.toLowerCase(Locale.ROOT)) {
+            "success" -> payload["code"] = PAYMENT_SUCCESS
+            "fail"-> payload["code"] = PAYMENT_FAIL
+            "cancel"-> payload["cancel"] = PAYMENT_CANCEL
+        }
+        messageChannel?.send(payload.toString())
+        return true
     }
 
 }

@@ -27,9 +27,9 @@ class _MyAppState extends State<MyApp> {
     String platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await FlutterUnionPay.platformVersion;
+      platformVersion = await FlutterUnionPay.version;
     } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+      platformVersion = 'Failed to get version.';
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -48,7 +48,7 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: (){
-            FlutterUnionPay.pay(mode: "01",tn: "747421476465444239201");
+            FlutterUnionPay.pay(mode: "01",tn: "719251036034515167400");
           },
           child: Icon(Icons.payment),
         ),
