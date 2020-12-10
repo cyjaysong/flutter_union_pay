@@ -14,6 +14,20 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Home(),
+    );
+  }
+}
+
+class Home extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => HomeState();
+}
+
+class HomeState extends State<Home> {
   String _platformVersion = 'Unknown';
 
   @override
@@ -40,40 +54,52 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _platformVersion = platformVersion;
     });
+
+    FlutterUnionPay.listenMessage((result) {
+      showDialog(
+        context: context,
+        child: SimpleDialog(
+          title: Text('TEST'),
+          children: [
+            Text(result.status.toString()),
+          ],
+        ),
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: (){
-            FlutterUnionPay.pay(mode: "01",tn: "719251036034515167400");
-          },
-          child: Icon(Icons.payment),
-        ),
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Column(
-          children: [
-            Center(
-              child: Text('Running on: $_platformVersion\n'),
-            ),
-           Builder(
-             builder:(context){
-               return  TextButton(
-                 onPressed: () {
-                   FlutterUnionPay.installed.then((value) {
-                     Scaffold.of(context).showSnackBar(SnackBar(content: Text(value.toString())));
-                   });
-                 },
-                 child: Text('check'),
-               );
-             },
-           ),
-          ],
-        ),
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          FlutterUnionPay.pay(
+              mode: PaymentEnv.DEVELOPMENT, tn: "719251036034515167400");
+        },
+        child: Icon(Icons.payment),
+      ),
+      appBar: AppBar(
+        title: const Text('Plugin example app'),
+      ),
+      body: Column(
+        children: [
+          Center(
+            child: Text('Running on: $_platformVersion\n'),
+          ),
+          Builder(
+            builder: (context) {
+              return TextButton(
+                onPressed: () {
+                  FlutterUnionPay.installed.then((value) {
+                    Scaffold.of(context).showSnackBar(
+                        SnackBar(content: Text(value.toString())));
+                  });
+                },
+                child: Text('check'),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

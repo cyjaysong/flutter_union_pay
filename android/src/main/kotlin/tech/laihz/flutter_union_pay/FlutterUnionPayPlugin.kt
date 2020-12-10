@@ -12,6 +12,7 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.*
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import org.json.JSONObject
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -33,11 +34,12 @@ class FlutterUnionPayPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, P
         const val PAYMENT_FAIL = 2
 
         const val PACKAGE_NAME = "flutter_union_pay"
+        const val MESSAGE_CHANNEL_NAME = "flutter_union_pay.message"
     }
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, PACKAGE_NAME)
-        messageChannel = BasicMessageChannel(flutterPluginBinding.binaryMessenger, PACKAGE_NAME, StringCodec.INSTANCE)
+        messageChannel = BasicMessageChannel(flutterPluginBinding.binaryMessenger, MESSAGE_CHANNEL_NAME, StringCodec.INSTANCE)
         channel.setMethodCallHandler(this)
 
     }
@@ -91,14 +93,15 @@ class FlutterUnionPayPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, P
         if (data == null) {
             return true
         }
-        var payload: HashMap<String, Any> = HashMap()
+        var payload: HashMap<String, Any?> = HashMap()
         val paymentStatus = data.extras?.getString("pay_result")
         when (paymentStatus?.toLowerCase(Locale.ROOT)) {
             "success" -> payload["code"] = PAYMENT_SUCCESS
             "fail"-> payload["code"] = PAYMENT_FAIL
-            "cancel"-> payload["cancel"] = PAYMENT_CANCEL
+            "cancel"-> payload["code"] = PAYMENT_CANCEL
         }
-        messageChannel?.send(payload.toString())
+        Log.w("payload",payload.toString())
+        messageChannel?.send(JSONObject(payload).toString())
         return true
     }
 
