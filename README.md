@@ -2,14 +2,13 @@
 
 A flutter union pay plugin.
 
-## Getting Started
+[![union_paySDK](https://img.shields.io/badge/union_pay_SDK-3.3.0-red)](https://open.unionpay.com/tjweb/acproduct/list?apiSvcId=450)
+![flutter_plugin V2](https://img.shields.io/badge/flutter_plugin-V2-red)
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+## Supported Platforms
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* Android
 
+## Exmaple
+
+see [exmaple folder](./example)
