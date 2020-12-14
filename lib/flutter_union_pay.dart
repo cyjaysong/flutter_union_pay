@@ -28,7 +28,9 @@ class FlutterUnionPay {
   ///
   /// `tn`订单流水号
   ///
-  /// `mode` `PaymentEnv` 开发环境
+  /// `mode(PaymentEnv)` 开发环境
+  /// 
+  /// `scheme` ios scheme,需要在info.plist中添加
   ///
   /// PaymentEnv.Development 测试环境
   ///
@@ -41,18 +43,21 @@ class FlutterUnionPay {
   ///});
   ///```
   static Future<bool> pay(
-      {@required String tn, @required PaymentEnv mode}) async {
-    return await _channel
-        .invokeMethod('pay', {'tn': tn, 'env': _getEnvString(mode)});
+      {@required String tn, @required PaymentEnv mode, String scheme}) async {
+    return await _channel.invokeMethod('pay', {
+      'tn': tn,
+      'env': _getEnvString(mode),
+      'scheme':scheme,
+    });
   }
 
   /// ## 监听支付结果
   ///```dart
-  ///FlutterUnionPay.listenMessage((result) {
+  ///FlutterUnionPay.listen((result) {
   /// //place your code here.
   ///});
   ///```
-  static listenMessage(Function(PaymentResult result) onListener) {
+  static listen(Function(PaymentResult result) onListener) {
     var channel = BasicMessageChannel(_MESSAGE_CHANNEL_NAME, StringCodec());
     channel.setMessageHandler(
         (message) => onListener(PaymentResult.fromJson(message)));

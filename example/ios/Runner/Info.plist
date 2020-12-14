@@ -23,9 +23,11 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>tech.laihz.union_pay</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>f_union_pay</string>
+				<string>UnionPayTest</string>
 			</array>
 		</dict>
 	</array>
@@ -41,6 +43,11 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

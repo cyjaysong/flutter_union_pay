@@ -74,8 +74,10 @@ class HomeState extends State<Home> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           FlutterUnionPay.pay(
-                  mode: PaymentEnv.DEVELOPMENT, tn: "525778470582950956800")
-              .then((value) {
+            mode: PaymentEnv.DEVELOPMENT,
+            tn: "803174382316824602600",
+            scheme: "UnionPayTest",
+          ).then((value) {
             print("##########$value");
           });
         },

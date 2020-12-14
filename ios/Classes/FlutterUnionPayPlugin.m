@@ -1,14 +1,11 @@
 #import "FlutterUnionPayPlugin.h"
 #import "SDK/UPPaymentControl.h"
 
-@implementation FlutterUnionPayPlugin{
-    UIViewController *_viewController;
-}
-
+@implementation FlutterUnionPayPlugin
 - (instancetype)initWithViewController:(UIViewController *)viewController{
     self = [super init];
     if(self){
-        _viewController = viewController;
+        self.viewController = viewController;
     }
     return self;
 }
@@ -34,8 +31,8 @@
   }else if([@"pay" isEqualToString:call.method]){
       NSString *tn = call.arguments[@"tn"];
       NSString *mode = call.arguments[@"env"];
-      Boolean ret = [[UPPaymentControl defaultControl] startPay:tn fromScheme:@"f_union_pay" mode:mode viewController:_viewController];
-      printf("%d\n",ret);
+      NSString *scheme = call.arguments[@"scheme"];
+      Boolean ret = [[UPPaymentControl defaultControl] startPay:tn fromScheme:scheme mode:mode viewController:self.viewController];
       result([NSNumber numberWithBool:ret]);
       
   }else {
@@ -43,13 +40,13 @@
   }
 }
 
-
 - (BOOL) application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
     [[UPPaymentControl defaultControl] handlePaymentResult:url completeBlock:^(NSString *code, NSDictionary *data) {
         printf("TEST PRINT");
         NSMutableDictionary *payload = [[NSMutableDictionary alloc] init];
         if([code isEqualToString:@"success"]) {
+            //交易成功
             [payload setValue:[NSNumber numberWithInt:1] forKey:@"code"];
         }
         else if([code isEqualToString:@"fail"]) {
