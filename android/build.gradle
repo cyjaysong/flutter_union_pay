@@ -32,6 +32,20 @@ android {
         main.assets.srcDirs 'src/main/assets'
         main.jniLibs.srcDirs 'libs/jniLibs'
     }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            useProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+        }
+        debug {
+            minifyEnabled false
+            useProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+        }
+    }
+
     defaultConfig {
         minSdkVersion 23
     }
@@ -44,4 +58,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation files('libs/UPPayAssistEx.jar')
     implementation files('libs/UPPayPluginExPro.jar')
+    compileOnly files('libs/org.simalliance.openmobileapi.jar')
 }

@@ -6,6 +6,32 @@ A flutter union pay plugin.
 
 云闪付支付插件。
 
+## 注意
+
+可能需要关闭*R8代码压缩*或*Proguard*
+
+### 临时解决方案
+
+`android/app/build.gradle`
+
+```gradle
+/**Other Config**/
+buildTypes {
+        release {
+            /**Other Config**/
+            minifyEnabled false
+            shrinkResources false
+        }
+
+        debug {
+            /**Other Config**/
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+/**Other Config**/
+```
+
 ## Dependencies
 
 ### Android

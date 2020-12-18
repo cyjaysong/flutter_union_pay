@@ -29,7 +29,7 @@ class FlutterUnionPay {
   /// `tn`订单流水号
   ///
   /// `mode(PaymentEnv)` 开发环境
-  /// 
+  ///
   /// `scheme` ios scheme,需要在info.plist中添加
   ///
   /// PaymentEnv.Development 测试环境
@@ -47,7 +47,7 @@ class FlutterUnionPay {
     return await _channel.invokeMethod('pay', {
       'tn': tn,
       'env': _getEnvString(mode),
-      'scheme':scheme,
+      'scheme': scheme,
     });
   }
 
