@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_union_pay/flutter_union_pay.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('flutter_union_pay');
@@ -15,9 +14,5 @@ void main() {
 
   tearDown(() {
     channel.setMockMethodCallHandler(null);
-  });
-
-  test('getPlatformVersion', () async {
-    expect(await FlutterUnionPay.platformVersion, '42');
   });
 }

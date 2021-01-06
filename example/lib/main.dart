@@ -55,7 +55,7 @@ class HomeState extends State<Home> {
       _platformVersion = platformVersion;
     });
 
-    FlutterUnionPay.listenMessage((result) {
+    FlutterUnionPay.listen((result) {
       showDialog(
         context: context,
         child: SimpleDialog(
