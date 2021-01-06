@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.4
+
+remove proguard
+
 ## 0.0.3
 
 proguard rules
